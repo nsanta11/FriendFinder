@@ -1,17 +1,17 @@
 
-var currentData = require("../data/currentData");
+var currentData = require("../data/friends");
+
 
 module.exports = function(app) {
-
 
   app.get("/api/survey", function(req, res) {
     res.json(currentData);
   });
 
   app.post("/api/survey", function(req, res) {
-
+      console.log(req.body);
       currentData.push(req.body);
-      res.json(true);
+      res.json(currentData);
   });
 
   // ---------------------------------------------------------------------------
