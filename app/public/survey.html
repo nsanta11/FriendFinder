@@ -20,6 +20,7 @@
 
 
 </head>
+
 <body>
 
     <div class="container">
@@ -226,15 +227,15 @@
 
         var currentURL = window.location.origin;
         $.ajax({ url: currentURL + "/api/survey", method: "GET" })
-        .then(function (currentData) {
-            console.log(currentData);
-        });
+            .then(function (currentData) {
+                console.log(currentData);
+            });
 
         var newClass = [];
         var newScore = [];
         for (var i = 0; i < 10; i++) {
             newClass[i] = classes[i].slice(0, 2);
-            newScore[i] = parseInt(classes[i], 10);
+            newScore[i] = parseInt(classes[i]);
             //console.log(newClass)
             //classes = parseInt(classes[i]);
         }
@@ -242,22 +243,87 @@
         var currentFriend = {
             friendName: $("#friend-name").val().trim(),
             friendPhoto: $("#friend-photo").val().trim(),
-            scores: newScore
+            scores: newScore,
         };
 
         console.log(currentFriend);
-        console.log(newScore);
+        //newScore = parseInt(newScore);
+        console.log(parseInt(newScore));
+
+        var sum = 0;
 
         var currentURL = window.location.origin;
         $.ajax({ url: currentURL + "/api/survey", method: "POST", data: currentFriend })
             .then(function (allFriends) {
                 console.log(allFriends);
-                for (var i = 0; i < allFriends.length-1; i++) {
-                        console.log(newScore - (allFriends[i].scores));
-                        //[allFriends.length-1]
-                }
-            })
+                for (var i = 0; i < allFriends.length - 1; i++) {
+                    // sum += parseInt(newScore[i], 10);
+                    // console.log(sum);
+                    sum = 0;
+                    var friendScores = allFriends[i].scores;
+                    console.log(friendScores);
+                     for (var j = 0; j < allFriends[i].scores.length; j++) {
+                   sum += (parseInt(newScore[j])) - parseInt((allFriends[i].scores[j]))
+                        newSum = Math.abs(sum);
+                         console.log(newSum);
+                         if (j===9) {
+                             console.log(newSum)
+                         }
+                    // sum += (parseInt(newScore[j])) - parseInt((friendScores[j]))
+                    //    newSum = Math.abs(sum);
+                    //     console.log(newSum)
                 
+                    
+                         
+                      
+
+                    //         console.log(Math.abs(difference));
+                    //         console.log(difference)
+
+                        //(parseInt(newScore[j])) - parseInt((friendScores[j]))
+                       //  newSum = Math.abs(sum);
+                        //  console.log(newSum)
+                       
+                
+                    
+                
+
+                    //     for (var i = 0; i < 1; i++) {
+                    // // sum += parseInt(newScore[i], 10);
+                    // // console.log(sum);
+                    // var friendScores = allFriends[allFriends.length - 2].scores;
+                    // console.log(friendScores);
+                    // for (var i = 0; i < 10; i++) {
+                    //     difference.push(parseInt(newScore[i]) - parseInt(friendScores[i]));
+                    //     if (i === 9) {
+                    //         //console.log(parseInt(difference));
+                    //         console.log(Math.abs(difference));
+                    //         console.log(difference)
+
+                    //         for (var i = 0; i < difference.length; i++) {
+
+                    //             sum += difference[i];
+                    //             if (i===9){
+                    //                 console.log(sum);  
+                    //             }
+                    //         }
+                    //     }
+
+//
+
+                        // for (var i = 1; i < difference.length; i++) {
+
+                        //     var sum = difference[i] + difference[i];
+
+                        //     console.log(sum);
+                        // }
+
+                    }
+                    //[allFriends.length-1]
+                }
+            
+            })
+
     });
 
 </script>
