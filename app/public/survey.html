@@ -194,7 +194,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Modal body text goes here.</p>
+                            <p id="body-text"></p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -215,22 +215,24 @@
     var scores = [];
     //console.log(classes);
 
+   // var difference = [];
 
     $("#myButton").on("click", function (event) {
+        console.log(difference)
         event.preventDefault();
         $('.modal').modal('show')
-
+       
         var classesNodeList = document.querySelectorAll(".survey-number");
         var classes = Array.prototype.map.call(classesNodeList, function (element) {
             return element.value
         });
-
+        
         var currentURL = window.location.origin;
         $.ajax({ url: currentURL + "/api/survey", method: "GET" })
             .then(function (currentData) {
                 console.log(currentData);
             });
-
+            
         var newClass = [];
         var newScore = [];
         for (var i = 0; i < 10; i++) {
@@ -239,6 +241,7 @@
             //console.log(newClass)
             //classes = parseInt(classes[i]);
         }
+        
         // Here we grab the form elements
         var currentFriend = {
             friendName: $("#friend-name").val().trim(),
@@ -249,146 +252,62 @@
         console.log(currentFriend);
         //newScore = parseInt(newScore);
         console.log(parseInt(newScore));
-
+       
         var sum = 0;
-
+        var min = 0;
+        var difference = [];
         var currentURL = window.location.origin;
+        var newSum = 0 
+        var user = []
+        var index = 0 
+        var name = [];
+        var pic = [];
+        
         $.ajax({ url: currentURL + "/api/survey", method: "POST", data: currentFriend })
             .then(function (allFriends) {
+          
                 console.log(allFriends);
-                for (var i = 0; i < allFriends.length - 1; i++) {
+                
+                for (var i = 0; i < allFriends.length-1; i++) {
                     // sum += parseInt(newScore[i], 10);
                     // console.log(sum);
                     sum = 0;
                     var friendScores = allFriends[i].scores;
                     console.log(friendScores);
-                     for (var j = 0; j < allFriends[i].scores.length; j++) {
-                   sum += (parseInt(newScore[j])) - parseInt((allFriends[i].scores[j]))
-                        newSum = Math.abs(sum);
-                         console.log(newSum);
-                         if (j===9) {
-                             console.log(newSum)
-                         }
-                    // sum += (parseInt(newScore[j])) - parseInt((friendScores[j]))
-                    //    newSum = Math.abs(sum);
-                    //     console.log(newSum)
-                
-                    
-                         
-                      
+                    for (var j = 0; j < allFriends[i].scores.length; j++) {
+                        sum += (parseInt(newScore[j])) - parseInt((allFriends[i].scores[j]))
+                        newSum = Math.abs(sum); 
+                        console.log(newSum);
+                        }
+                        difference.push(newSum);
+                    }  
+                            min = Math.min.apply(null, difference)
+                            console.log(min);
+                        
+                            for (var i = 0; i < difference.length; i++) {
+                                //min = 9999
+                                if (min == difference[i]) {
+                                    //min = difference[i]
+                                    user[index] = i
+                                    index = index + 1
+                                }
+                            }
+                            console.log(difference)
+                            console.log(user);
+                            for (i = 0 ; i < user.length; i++){
+                             name[i] = allFriends[user[i]].friendName
+                             pic[i] = allFriends[user[i]].friendPhoto
+                             $("#body-text").text("Your best friend match is: " + name + "\n\n")
+                            }
+                           // $("#body-text").text("Your best friend match is: " + name)
+                            console.log(name) 
+                            console.log(pic)
+                            
 
-                    //         console.log(Math.abs(difference));
-                    //         console.log(difference)
-
-                        //(parseInt(newScore[j])) - parseInt((friendScores[j]))
-                       //  newSum = Math.abs(sum);
-                        //  console.log(newSum)
-                       
-                
-                    
-                
-
-                    //     for (var i = 0; i < 1; i++) {
-                    // // sum += parseInt(newScore[i], 10);
-                    // // console.log(sum);
-                    // var friendScores = allFriends[allFriends.length - 2].scores;
-                    // console.log(friendScores);
-                    // for (var i = 0; i < 10; i++) {
-                    //     difference.push(parseInt(newScore[i]) - parseInt(friendScores[i]));
-                    //     if (i === 9) {
-                    //         //console.log(parseInt(difference));
-                    //         console.log(Math.abs(difference));
-                    //         console.log(difference)
-
-                    //         for (var i = 0; i < difference.length; i++) {
-
-                    //             sum += difference[i];
-                    //             if (i===9){
-                    //                 console.log(sum);  
-                    //             }
-                    //         }
-                    //     }
-
-//
-
-                        // for (var i = 1; i < difference.length; i++) {
-
-                        //     var sum = difference[i] + difference[i];
-
-                        //     console.log(sum);
-                        // }
-
-                    }
-                    //[allFriends.length-1]
-                }
-            
             })
+        
+    
 
     });
 
 </script>
-
-<!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
-<!-- <script type="text/javascript">
-
-    var scores = [];
-    //console.log(classes);
-    $("#myButton").on("click", function (event) {
-        event.preventDefault();
-        $('.modal').modal('show')
-
-        var classesNodeList = document.querySelectorAll(".survey-number");
-        var classes = Array.prototype.map.call(classesNodeList, function (element) {
-            return element.value
-        });
-
-        var newClass = [];
-        var newScore = [];
-        for (var i = 0; i < 10; i++) {
-            newClass[i] = classes[i].slice(0, 2);
-            newScore[i] = parseInt(classes[i], 10);
-            //console.log(newClass)
-            //classes = parseInt(classes[i]);
-        }
-        // Here we grab the form elements
-        var currentFriend = {
-            friendName: $("#friend-name").val().trim(),
-            friendPhoto: $("#friend-photo").val().trim(),
-            scores: newScore
-        };
-
-        console.log(currentFriend);
-        console.log(newScore);
-
-        var currentURL = window.location.origin;
-        $.ajax({url: currentURL + "api/survey", method: "POST", data: currentFriend})
-            .then(function (allFriends) {
-                console.log(allFriends);
-            })
-    });
-
-</script> -->
-
-<!-- //var currentURL = window.location.origin;
-
-    // The AJAX function uses the URL of our API to GET the data associated with it (initially set to localhost)
-    // $.ajax({ url: currentURL + "/api/survey", method: "GET" })
-    //     .then(function (currentData) {
-
-    //         // Here we are logging the URL so we have access to it for troubleshooting
-    //         console.log("------------------------------------");
-    //         console.log("URL: " + currentURL + "/api/survey");
-    //         console.log("------------------------------------");
-
-    //         // Here we then log the NYTData to console, where it will show up as an object.
-    //         console.log(currentData);
-    //         console.log("------------------------------------");
-
-    //         // Loop through and display each of the customers
-    //         for (var i = 0; i < currentData.length; i++) {
-
-    //             // Create the HTML Well (Section) and Add the table content for each reserved table
-    //             var friendResult = $("<div>");
-    //             $(".modal-body").append(friendResult);
-    //         }
-    //     }); -->
